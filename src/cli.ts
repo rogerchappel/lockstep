@@ -46,7 +46,7 @@ export function parseFormat(value: string | boolean | undefined): OutputFormat {
 export async function run(argv = process.argv.slice(2)): Promise<number> {
   const [command, ...rest] = argv;
   const parsed = parseArgs(rest);
-  if (!command || parsed.values.help) {
+  if (!command || command === '--help' || command === '-h' || parsed.values.help) {
     process.stdout.write(help());
     return 0;
   }
