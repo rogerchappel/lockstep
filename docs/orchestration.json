@@ -1,0 +1,10 @@
+{
+  "name": "lockstep",
+  "version": 1,
+  "defaultCommand": "lockstep scan . --policy lockstep.config.json --format markdown --output DRIFT.md",
+  "localFirst": true,
+  "mutatesPackagesByDefault": false,
+  "reads": ["package.json", "package-lock.json", "pnpm-lock.yaml", "yarn.lock", "bun.lock", "bun.lockb"],
+  "writes": ["explicit --output path", "lockstep.config.json via init --write-policy"],
+  "recommendedGates": ["npm test", "npm run check", "npm run build", "npm run smoke", "bash scripts/validate.sh"]
+}
