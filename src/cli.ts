@@ -6,12 +6,12 @@ import { loadPolicy, policyJson } from './policy.js';
 import { scanWorkspace } from './scanner.js';
 import type { OutputFormat } from './types.js';
 
-interface ParsedOptions {
+export interface ParsedOptions {
   values: Record<string, string | boolean>;
   positionals: string[];
 }
 
-function parseArgs(args: string[]): ParsedOptions {
+export function parseArgs(args: string[]): ParsedOptions {
   const values: Record<string, string | boolean> = {};
   const positionals: string[] = [];
   for (let index = 0; index < args.length; index += 1) {
@@ -33,11 +33,11 @@ function parseArgs(args: string[]): ParsedOptions {
   return { values, positionals };
 }
 
-function help(): string {
+export function help(): string {
   return `lockstep - local-first package script and toolchain drift checker\n\nUsage:\n  lockstep init [--write-policy] [--output lockstep.config.json]\n  lockstep scan <workspace> [--policy lockstep.config.json] [--format table|json|markdown] [--output DRIFT.md] [--fail-on-drift] [--fail-on-warnings]\n\nExamples:\n  lockstep scan /Users/me/Developer --policy lockstep.config.json\n  lockstep init --write-policy\n  lockstep scan . --format markdown --output DRIFT.md\n`;
 }
 
-function parseFormat(value: string | boolean | undefined): OutputFormat {
+export function parseFormat(value: string | boolean | undefined): OutputFormat {
   const format = value ? String(value) : 'table';
   if (format === 'table' || format === 'json' || format === 'markdown') return format;
   throw new Error(`Unsupported format \"${format}\". Use table, json, or markdown.`);
