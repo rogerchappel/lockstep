@@ -6,7 +6,7 @@ import type { LockstepPolicy, ScanReport } from './types.js';
 
 export async function scanWorkspace(rootInput: string, policy: LockstepPolicy, now = new Date()): Promise<ScanReport> {
   const root = resolve(rootInput);
-  const packageJsonFiles = await findPackageJsonFiles(root);
+  const packageJsonFiles = await findPackageJsonFiles(root, { ignoredDirectories: policy.ignoredDirectories });
   const packages = await Promise.all(packageJsonFiles.map((file) => readPackage(root, file)));
   const findings = packages.flatMap((pkg) => analyzePackage(pkg, policy));
   const errorCount = findings.filter((finding) => finding.severity === 'error').length;
