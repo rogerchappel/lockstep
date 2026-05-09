@@ -44,6 +44,12 @@ Fail CI only when required-script errors are present:
 lockstep scan . --fail-on-drift
 ```
 
+Use stricter adoption gates when any warning should fail:
+
+```sh
+lockstep scan . --fail-on-warnings
+```
+
 ## What Lockstep checks
 
 - Required scripts such as `test`, `check`, `build`, and `smoke`
@@ -51,6 +57,7 @@ lockstep scan . --fail-on-drift
 - `engines.node` consistency
 - `packageManager` presence and allowed manager prefixes
 - Lockfile presence beside each manifest
+- Additional ignored directory names from policy
 
 ## Policy example
 
@@ -62,7 +69,8 @@ lockstep scan . --fail-on-drift
   "requiredEngines": { "node": ">=20" },
   "allowedPackageManagers": ["npm@", "pnpm@"],
   "requirePackageManager": false,
-  "requireLockfile": true
+  "requireLockfile": true,
+  "ignoredDirectories": ["node_modules", "dist"]
 }
 ```
 
