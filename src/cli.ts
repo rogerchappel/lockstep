@@ -84,9 +84,11 @@ export async function run(argv = process.argv.slice(2)): Promise<number> {
   throw new Error(`Unknown command \"${command}\".\n\n${help()}`);
 }
 
-run().then((code) => {
-  process.exitCode = code;
-}).catch((error: unknown) => {
-  process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
-  process.exitCode = 1;
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  run().then((code) => {
+    process.exitCode = code;
+  }).catch((error: unknown) => {
+    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+    process.exitCode = 1;
+  });
+}
