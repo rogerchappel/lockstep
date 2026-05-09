@@ -1,3 +1,4 @@
+import { redactText } from './redact.js';
 import type { OutputFormat, ScanReport } from './types.js';
 
 function pad(value: string, length: number): string {
@@ -5,7 +6,7 @@ function pad(value: string, length: number): string {
 }
 
 export function formatTable(report: ScanReport): string {
-  const rows = report.findings.map((finding) => [finding.severity, finding.category, finding.packagePath, finding.message, finding.suggestion]);
+  const rows = report.findings.map((finding) => [finding.severity, finding.category, finding.packagePath, redactText(finding.message), redactText(finding.suggestion)]);
   if (rows.length === 0) {
     return `Lockstep scan: ${report.summary.packageCount} package(s), no drift found.\n`;
   }
@@ -34,7 +35,7 @@ export function formatMarkdown(report: ScanReport): string {
     lines.push('| Severity | Category | Package | Message | Suggestion |');
     lines.push('| --- | --- | --- | --- | --- |');
     for (const finding of report.findings) {
-      lines.push(`| ${finding.severity} | ${finding.category} | \`${finding.packagePath}\` | ${finding.message} | ${finding.suggestion} |`);
+      lines.push(`| ${finding.severity} | ${finding.category} | \`${finding.packagePath}\` | ${redactText(finding.message)} | ${redactText(finding.suggestion)} |`);
     }
   }
 
