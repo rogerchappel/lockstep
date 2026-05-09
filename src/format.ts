@@ -1,6 +1,10 @@
 import { redactText } from './redact.js';
 import type { OutputFormat, ScanReport } from './types.js';
 
+function escapeMarkdownCell(value: string): string {
+  return value.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+}
+
 function pad(value: string, length: number): string {
   return value.padEnd(length, ' ');
 }
@@ -35,7 +39,7 @@ export function formatMarkdown(report: ScanReport): string {
     lines.push('| Severity | Category | Package | Message | Suggestion |');
     lines.push('| --- | --- | --- | --- | --- |');
     for (const finding of report.findings) {
-      lines.push(`| ${finding.severity} | ${finding.category} | \`${finding.packagePath}\` | ${redactText(finding.message)} | ${redactText(finding.suggestion)} |`);
+      lines.push(`| ${finding.severity} | ${finding.category} | \`${escapeMarkdownCell(finding.packagePath)}\` | ${escapeMarkdownCell(redactText(finding.message))} | ${escapeMarkdownCell(redactText(finding.suggestion))} |`);
     }
   }
 
@@ -43,7 +47,7 @@ export function formatMarkdown(report: ScanReport): string {
   lines.push('| Package | Path | Scripts | Engine | Manager | Lockfiles |');
   lines.push('| --- | --- | --- | --- | --- | --- |');
   for (const pkg of report.packages) {
-    lines.push(`| ${pkg.name} | \`${pkg.relativePath}\` | ${Object.keys(pkg.scripts).sort().join(', ') || '—'} | ${pkg.engines.node ?? '—'} | ${pkg.packageManager ?? '—'} | ${pkg.lockfiles.join(', ') || '—'} |`);
+    lines.push(`| ${escapeMarkdownCell(pkg.name)} | \`${escapeMarkdownCell(pkg.relativePath)}\` | ${escapeMarkdownCell(Object.keys(pkg.scripts).sort().join(', ') || '—')} | ${escapeMarkdownCell(pkg.engines.node ?? '—')} | ${escapeMarkdownCell(pkg.packageManager ?? '—')} | ${escapeMarkdownCell(pkg.lockfiles.join(', ') || '—')} |`);
   }
 
   return `${lines.join('\n')}\n`;
