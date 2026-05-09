@@ -1,3 +1,4 @@
+import { isPackageManagerAllowed } from './package-manager.js';
 import type { DriftFinding, LockstepPolicy, PackageRecord } from './types.js';
 
 function finding(pkg: PackageRecord, input: Omit<DriftFinding, 'packageName' | 'packagePath'>): DriftFinding {
@@ -54,8 +55,7 @@ export function analyzePackage(pkg: PackageRecord, policy: LockstepPolicy): Drif
   }
 
   if (pkg.packageManager && policy.allowedPackageManagers?.length) {
-    const allowed = policy.allowedPackageManagers.some((prefix) => pkg.packageManager?.startsWith(prefix));
-    if (!allowed) {
+    if (!isPackageManagerAllowed(pkg.packageManager, policy.allowedPackageManagers)) {
       findings.push(finding(pkg, {
         category: 'packageManager',
         severity: 'warning',
