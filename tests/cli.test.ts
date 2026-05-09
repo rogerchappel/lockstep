@@ -12,12 +12,12 @@ test('cli writes policy and markdown drift report', async () => {
   const temp = await mkdtemp(join(tmpdir(), 'lockstep-test-'));
   try {
     const policyPath = join(temp, 'lockstep.config.json');
-    await execFileAsync(process.execPath, ['dist/cli.js', 'init', '--write-policy', '--output', policyPath]);
+    await execFileAsync(process.execPath, ['dist/src/cli.js', 'init', '--write-policy', '--output', policyPath]);
     const policy = await readFile(policyPath, 'utf8');
     match(policy, /requiredScripts/);
 
     const outputPath = join(temp, 'DRIFT.md');
-    await execFileAsync(process.execPath, ['dist/cli.js', 'scan', 'tests/fixtures/workspace', '--policy', 'tests/fixtures/workspace/lockstep.config.json', '--format', 'markdown', '--output', outputPath]);
+    await execFileAsync(process.execPath, ['dist/src/cli.js', 'scan', 'tests/fixtures/workspace', '--policy', 'tests/fixtures/workspace/lockstep.config.json', '--format', 'markdown', '--output', outputPath]);
     const report = await readFile(outputPath, 'utf8');
     match(report, /Lockstep Drift Report/);
     match(report, /drifty-package/);
@@ -29,7 +29,7 @@ test('cli writes policy and markdown drift report', async () => {
 
 
 test('cli exposes strict warning failure option in help', async () => {
-  const result = await execFileAsync(process.execPath, ['dist/cli.js', '--help']);
+  const result = await execFileAsync(process.execPath, ['dist/src/cli.js', '--help']);
   match(result.stdout, /--fail-on-warnings/);
 });
 

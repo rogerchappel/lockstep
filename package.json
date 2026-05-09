@@ -4,7 +4,7 @@
   "description": "Multi-package script and toolchain drift checker.",
   "type": "module",
   "bin": {
-    "lockstep": "./dist/cli.js"
+    "lockstep": "./dist/src/cli.js"
   },
   "main": "./dist/index.js",
   "exports": {
@@ -19,7 +19,7 @@
     "build": "tsc",
     "check": "tsc --noEmit",
     "test": "npm run build && node --test dist/tests/*.test.js",
-    "smoke": "npm run build && node dist/cli.js scan tests/fixtures/workspace --policy tests/fixtures/workspace/lockstep.config.json --format markdown --output /tmp/lockstep-smoke.md && test -s /tmp/lockstep-smoke.md",
+    "smoke": "npm run build && node dist/src/cli.js scan tests/fixtures/workspace --policy tests/fixtures/workspace/lockstep.config.json --format markdown --output /tmp/lockstep-smoke.md && test -s /tmp/lockstep-smoke.md",
     "package:smoke": "npm pack --dry-run",
     "release:check": "npm test && npm run check && npm run build && npm run smoke && npm run package:smoke"
   },
