@@ -6,4 +6,6 @@
   "allowedPackageManagers": ["npm@", "pnpm@"],
   "requirePackageManager": true,
   "requireLockfile": true
+,
+  "ignoredDirectories": ["ignored-package"]
 }
