@@ -1,0 +1,10 @@
+{
+  "name": "weird-package",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "check": "echo ok",
+    "build": "echo ok"
+  }
+}
