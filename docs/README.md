@@ -11,3 +11,10 @@ This directory holds project documentation.
 ## Additional docs
 
 For a hosted documentation site, see the `docs-site/` directory if present.
+
+## References
+
+- [Configuration](configuration.md)
+- [Orchestration](ORCHESTRATION.md)
+- [Tasks](TASKS.md)
+
