@@ -21,7 +21,7 @@ function parseArgs(args: string[]): ParsedOptions {
       continue;
     }
     const key = arg.slice(2);
-    if (key === 'write-policy' || key === 'help' || key === 'fail-on-drift') {
+    if (key === 'write-policy' || key === 'help' || key === 'fail-on-drift' || key === 'fail-on-warnings') {
       values[key] = true;
       continue;
     }
@@ -34,7 +34,7 @@ function parseArgs(args: string[]): ParsedOptions {
 }
 
 function help(): string {
-  return `lockstep - local-first package script and toolchain drift checker\n\nUsage:\n  lockstep init [--write-policy] [--output lockstep.config.json]\n  lockstep scan <workspace> [--policy lockstep.config.json] [--format table|json|markdown] [--output DRIFT.md] [--fail-on-drift]\n\nExamples:\n  lockstep scan /Users/me/Developer --policy lockstep.config.json\n  lockstep init --write-policy\n  lockstep scan . --format markdown --output DRIFT.md\n`;
+  return `lockstep - local-first package script and toolchain drift checker\n\nUsage:\n  lockstep init [--write-policy] [--output lockstep.config.json]\n  lockstep scan <workspace> [--policy lockstep.config.json] [--format table|json|markdown] [--output DRIFT.md] [--fail-on-drift] [--fail-on-warnings]\n\nExamples:\n  lockstep scan /Users/me/Developer --policy lockstep.config.json\n  lockstep init --write-policy\n  lockstep scan . --format markdown --output DRIFT.md\n`;
 }
 
 function parseFormat(value: string | boolean | undefined): OutputFormat {
@@ -76,7 +76,9 @@ export async function run(argv = process.argv.slice(2)): Promise<number> {
     } else {
       process.stdout.write(rendered);
     }
-    return parsed.values['fail-on-drift'] && report.summary.errorCount > 0 ? 1 : 0;
+    if (parsed.values['fail-on-drift'] && report.summary.errorCount > 0) return 1;
+    if (parsed.values['fail-on-warnings'] && report.summary.findingCount > 0) return 1;
+    return 0;
   }
 
   throw new Error(`Unknown command \"${command}\".\n\n${help()}`);
