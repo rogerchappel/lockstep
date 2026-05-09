@@ -26,3 +26,9 @@ test('cli writes policy and markdown drift report', async () => {
     await rm(temp, { recursive: true, force: true });
   }
 });
+
+
+test('cli exposes strict warning failure option in help', async () => {
+  const result = await execFileAsync(process.execPath, ['dist/cli.js', '--help']);
+  match(result.stdout, /--fail-on-warnings/);
+});
