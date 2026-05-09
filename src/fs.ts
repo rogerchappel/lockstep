@@ -24,14 +24,19 @@ export async function pathExists(path: string): Promise<boolean> {
   }
 }
 
-export async function findPackageJsonFiles(root: string): Promise<string[]> {
+export interface DiscoveryOptions {
+  ignoredDirectories?: string[];
+}
+
+export async function findPackageJsonFiles(root: string, options: DiscoveryOptions = {}): Promise<string[]> {
   const results: string[] = [];
 
   async function walk(directory: string): Promise<void> {
     const entries = await readdir(directory, { withFileTypes: true });
     for (const entry of entries) {
       if (entry.isDirectory()) {
-        if (!ignoredDirectoryNames.has(entry.name)) await walk(join(directory, entry.name));
+        const ignored = new Set([...ignoredDirectoryNames, ...(options.ignoredDirectories ?? [])]);
+        if (!ignored.has(entry.name)) await walk(join(directory, entry.name));
         continue;
       }
       if (entry.isFile() && entry.name === 'package.json') {
