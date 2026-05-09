@@ -20,3 +20,14 @@ test('renders table report with finding details', () => {
   match(formatTable(report), /severity/);
   match(formatTable(report), /Missing required script/);
 });
+
+
+test('escapes pipe characters in markdown cells', () => {
+  const rendered = formatMarkdown({
+    ...report,
+    packages: [{ ...report.packages[0], name: 'demo|pkg' }],
+    findings: [{ ...report.findings[0], message: 'a | b' }]
+  });
+  match(rendered, /demo\\\|pkg/);
+  match(rendered, /a \\\| b/);
+});
