@@ -15,7 +15,7 @@ npm link
 Or run from a checkout:
 
 ```sh
-node dist/cli.js scan .
+node dist/src/cli.js scan .
 ```
 
 ## Quick start
