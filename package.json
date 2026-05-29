@@ -7,12 +7,18 @@
     "lockstep": "./dist/src/cli.js"
   },
   "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
   "exports": {
-    ".": "./dist/src/index.js"
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    }
   },
   "files": [
     "dist/src",
     "README.md",
+    "LICENSE",
+    "SECURITY.md",
     "docs"
   ],
   "scripts": {
@@ -33,6 +39,14 @@
   ],
   "author": "Roger Chappel",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/lockstep.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/lockstep/issues"
+  },
+  "homepage": "https://github.com/rogerchappel/lockstep#readme",
   "engines": {
     "node": ">=20"
   },
