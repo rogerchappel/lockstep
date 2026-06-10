@@ -1,0 +1,13 @@
+{
+  "name": "@demo/web",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "build": "vite build"
+  }
+}
+
