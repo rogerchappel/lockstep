@@ -1,0 +1,13 @@
+{
+  "requiredScripts": ["test", "check", "build", "smoke"],
+  "optionalScripts": ["lint", "release:check"],
+  "validationCommands": ["npm test", "npm run check", "npm run build", "npm run smoke"],
+  "requiredEngines": {
+    "node": ">=20"
+  },
+  "allowedPackageManagers": ["npm@", "pnpm@"],
+  "requirePackageManager": true,
+  "requireLockfile": false,
+  "ignoredDirectories": ["node_modules", "dist"]
+}
+

@@ -50,6 +50,17 @@ Use stricter adoption gates when any warning should fail:
 lockstep scan . --fail-on-warnings
 ```
 
+## Runnable demo
+
+The repository includes a small two-package workspace that shows a clean API package beside a web package with deliberate policy drift.
+
+```sh
+npm run build
+bash examples/demo-scan.sh
+```
+
+The script writes a Markdown drift report to a temporary file and prints the first section for review.
+
 ## What Lockstep checks
 
 - Required scripts such as `test`, `check`, `build`, and `smoke`
