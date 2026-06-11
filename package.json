@@ -19,7 +19,11 @@
     "README.md",
     "LICENSE",
     "SECURITY.md",
-    "docs"
+    "docs",
+    "SAFETY.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md"
   ],
   "scripts": {
     "build": "tsc",
