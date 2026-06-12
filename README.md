@@ -89,22 +89,26 @@ The script writes a Markdown drift report to a temporary file and prints the fir
 
 Lockstep scans files and writes reports only when you pass `--output` or `init --write-policy`. It does not execute package scripts, install dependencies, post results, collect secrets, or mutate packages.
 
-## Verify this repo
-
-```sh
-npm test
-npm run check
-npm run build
-npm run smoke
-bash scripts/validate.sh
-```
-
 ## Package contents
 
 The npm package allowlist includes the runtime files plus the public support
 documents needed for release review: `README.md`, `LICENSE`, `SECURITY.md`, `SAFETY.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`.
 Run `npm run package:smoke` or `npm pack --dry-run` before publishing to
 confirm those files are still present in the tarball.
+
+## Verification
+
+Run the package checks before opening a release PR:
+
+```sh
+npm run check
+npm test
+npm run build
+npm run smoke
+npm run package:smoke
+npm run release:check
+bash scripts/validate.sh
+```
 
 ## Contributing
 
@@ -117,32 +121,3 @@ See [SECURITY.md](SECURITY.md). Please do not paste private manifests or secrets
 ## License
 
 MIT
-
-## Verification
-
-Run the package checks before opening a release PR:
-
-```bash
-npm run check
-```
-
-```bash
-npm test
-```
-
-```bash
-npm run build
-```
-
-```bash
-npm run smoke
-```
-
-```bash
-npm run package:smoke
-```
-
-```bash
-npm run release:check
-```
-
