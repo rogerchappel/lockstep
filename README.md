@@ -117,3 +117,32 @@ See [SECURITY.md](SECURITY.md). Please do not paste private manifests or secrets
 ## License
 
 MIT
+
+## Verification
+
+Run the package checks before opening a release PR:
+
+```bash
+npm run check
+```
+
+```bash
+npm test
+```
+
+```bash
+npm run build
+```
+
+```bash
+npm run smoke
+```
+
+```bash
+npm run package:smoke
+```
+
+```bash
+npm run release:check
+```
+
