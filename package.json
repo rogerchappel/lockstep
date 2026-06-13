@@ -16,6 +16,7 @@
   },
   "files": [
     "dist/src",
+    "examples",
     "README.md",
     "LICENSE",
     "SECURITY.md",
@@ -30,7 +31,7 @@
     "check": "tsc --noEmit",
     "test": "npm run build && node --test dist/tests/*.test.js",
     "smoke": "npm run build && node dist/src/cli.js scan tests/fixtures/workspace --policy tests/fixtures/workspace/lockstep.config.json --format markdown --output /tmp/lockstep-smoke.md && test -s /tmp/lockstep-smoke.md",
-    "package:smoke": "npm run build && npm pack --dry-run",
+    "package:smoke": "bash scripts/package-smoke.sh",
     "release:check": "npm test && npm run check && npm run build && npm run smoke && npm run package:smoke",
     "prepack": "npm run build"
   },
