@@ -61,6 +61,16 @@ bash examples/demo-scan.sh
 
 The script writes a Markdown drift report to a temporary file and prints the first section for review.
 
+To show the same fixture as a CI gate:
+
+```sh
+npm run build
+bash examples/ci-gate-demo.sh
+```
+
+That script verifies the Markdown report contains the expected web package drift
+and confirms `scan --fail-on-drift` exits non-zero for the fixture.
+
 ## What Lockstep checks
 
 - Required scripts such as `test`, `check`, `build`, and `smoke`
