@@ -15,3 +15,9 @@ npm run build
 bash examples/demo-scan.sh
 ```
 
+CI gate clip:
+
+```sh
+npm run build
+bash examples/ci-gate-demo.sh
+```
