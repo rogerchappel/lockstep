@@ -8,6 +8,8 @@
 
 3. Release prep gets easier when script drift is visible before CI. `lockstep scan . --format markdown --output DRIFT.md` gives maintainers a plain-text checklist they can commit or attach to a PR.
 
+4. Need structured output for a review bot or dashboard? `bash examples/json-report-demo.sh` writes the same fixture drift as JSON and verifies `@demo/web` appears.
+
 ## Demo CTA
 
 ```sh
@@ -20,4 +22,11 @@ CI gate clip:
 ```sh
 npm run build
 bash examples/ci-gate-demo.sh
+```
+
+JSON report clip:
+
+```sh
+npm run build
+bash examples/json-report-demo.sh
 ```

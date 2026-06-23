@@ -71,6 +71,16 @@ bash examples/ci-gate-demo.sh
 That script verifies the Markdown report contains the expected web package drift
 and confirms `scan --fail-on-drift` exits non-zero for the fixture.
 
+For structured output:
+
+```sh
+npm run build
+bash examples/json-report-demo.sh
+```
+
+That script writes a JSON drift report and verifies the deliberately drifting
+`@demo/web` package is present.
+
 ## What Lockstep checks
 
 - Required scripts such as `test`, `check`, `build`, and `smoke`
