@@ -30,3 +30,12 @@ JSON report clip:
 npm run build
 bash examples/json-report-demo.sh
 ```
+
+Remediation checklist clip:
+
+```sh
+bash examples/remediation-checklist-demo.sh
+```
+
+See [remediation checklist hooks](remediation-checklist-hooks.md) for copy that
+starts with the JSON report and ends with maintainer-ready package fixes.
