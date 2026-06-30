@@ -81,6 +81,16 @@ bash examples/json-report-demo.sh
 That script writes a JSON drift report and verifies the deliberately drifting
 `@demo/web` package is present.
 
+To turn the same JSON report into a maintainer checklist:
+
+```sh
+bash examples/remediation-checklist-demo.sh
+```
+
+That script writes a Markdown checklist from the fixture findings and verifies
+the `@demo/web` script, engine, and package manager suggestions. See
+[Remediation Checklist Demo](docs/tutorials/remediation-checklist.md).
+
 ## What Lockstep checks
 
 - Required scripts such as `test`, `check`, `build`, and `smoke`
