@@ -91,6 +91,16 @@ That script writes a Markdown checklist from the fixture findings and verifies
 the `@demo/web` script, engine, and package manager suggestions. See
 [Remediation Checklist Demo](docs/tutorials/remediation-checklist.md).
 
+For a stricter adoption gate that fails on warnings:
+
+```sh
+bash examples/warning-gate-demo.sh
+```
+
+That script writes a Markdown report and verifies `scan --fail-on-warnings`
+exits non-zero for the deliberately drifting fixture. See
+[Warning Gate Demo](docs/tutorials/warning-gate.md).
+
 ## What Lockstep checks
 
 - Required scripts such as `test`, `check`, `build`, and `smoke`
