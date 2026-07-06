@@ -70,6 +70,8 @@ bash examples/ci-gate-demo.sh
 
 That script verifies the Markdown report contains the expected web package drift
 and confirms `scan --fail-on-drift` exits non-zero for the fixture.
+For a short demo video outline based on the CI gate and remediation checklist
+scripts, see [Lockstep CI Gate Video Brief](docs/promo/ci-gate-video-brief.md).
 
 For structured output:
 
