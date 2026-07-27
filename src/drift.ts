@@ -9,6 +9,11 @@ function finding(pkg: PackageRecord, input: Omit<DriftFinding, 'packageName' | '
   };
 }
 
+function npmScriptFromValidationCommand(command: string): string | undefined {
+  const match = command.match(/^npm\s+(?:run\s+)?(\S+)(?:\s|$)/);
+  return match?.[1];
+}
+
 export function analyzePackage(pkg: PackageRecord, policy: LockstepPolicy): DriftFinding[] {
   const findings: DriftFinding[] = [];
 
@@ -24,8 +29,8 @@ export function analyzePackage(pkg: PackageRecord, policy: LockstepPolicy): Drif
   }
 
   for (const command of policy.validationCommands) {
-    const script = command.replace(/^npm run /, '').replace(/^npm /, '');
-    if (script !== command && !pkg.scripts[script]) {
+    const script = npmScriptFromValidationCommand(command);
+    if (script && !pkg.scripts[script]) {
       findings.push(finding(pkg, {
         category: 'validation',
         severity: 'warning',
