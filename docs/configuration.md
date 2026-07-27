@@ -13,4 +13,12 @@ Lockstep policy files are JSON so they can be reviewed easily in release and pla
 | `requireLockfile` | Warn when no supported lockfile sits beside `package.json`. |
 | `ignoredDirectories` | Extra directory names to skip during discovery. |
 
+`validationCommands` recognizes npm script commands in the forms
+`npm <script> [arguments]` and `npm run <script> [arguments]`. For example,
+`npm test -- --runInBand` checks for a `test` script, while
+`npm run check -- --pretty false` checks for a `check` script. Lockstep only
+checks whether the referenced script exists; it does not parse shell quoting,
+pipelines, command chains, environment assignments, or npm options placed
+before the script name.
+
 Run `lockstep init --write-policy` to create a starter policy.
