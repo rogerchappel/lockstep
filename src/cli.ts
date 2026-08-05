@@ -13,7 +13,20 @@ export interface ParsedOptions {
   positionals: string[];
 }
 
-export function parseArgs(args: string[]): ParsedOptions {
+interface CommandOptions {
+  boolean: ReadonlySet<string>;
+  value: ReadonlySet<string>;
+}
+
+const commandOptions: Record<'init' | 'scan', CommandOptions> = {
+  init: { boolean: new Set(['write-policy', 'help']), value: new Set(['output']) },
+  scan: {
+    boolean: new Set(['help', 'fail-on-drift', 'fail-on-warnings']),
+    value: new Set(['policy', 'format', 'output']),
+  },
+};
+
+export function parseArgs(args: string[], options?: CommandOptions): ParsedOptions {
   const values: Record<string, string | boolean> = {};
   const positionals: string[] = [];
   for (let index = 0; index < args.length; index += 1) {
@@ -23,7 +36,10 @@ export function parseArgs(args: string[]): ParsedOptions {
       continue;
     }
     const key = arg.slice(2);
-    if (key === 'write-policy' || key === 'help' || key === 'fail-on-drift' || key === 'fail-on-warnings') {
+    if (options && !options.boolean.has(key) && !options.value.has(key)) {
+      throw new Error(`Unknown option "--${key}".`);
+    }
+    if (options?.boolean.has(key) || (!options && (key === 'write-policy' || key === 'help' || key === 'fail-on-drift' || key === 'fail-on-warnings'))) {
       values[key] = true;
       continue;
     }
@@ -47,8 +63,20 @@ export function parseFormat(value: string | boolean | undefined): OutputFormat {
 
 export async function run(argv = process.argv.slice(2)): Promise<number> {
   const [command, ...rest] = argv;
-  const parsed = parseArgs(rest);
-  if (!command || command === '--help' || command === '-h' || parsed.values.help) {
+  if (!command || command === '--help' || command === '-h') {
+    process.stdout.write(help());
+    return 0;
+  }
+  if (command !== 'init' && command !== 'scan') {
+    throw new Error(`Unknown command "${command}".\n\n${help()}`);
+  }
+
+  const parsed = parseArgs(rest, commandOptions[command]);
+  const expectedPositionals = command === 'scan' ? 1 : 0;
+  if (parsed.positionals.length > expectedPositionals) {
+    throw new Error(`Too many operands for ${command}.`);
+  }
+  if (parsed.values.help) {
     process.stdout.write(help());
     return 0;
   }
@@ -83,7 +111,7 @@ export async function run(argv = process.argv.slice(2)): Promise<number> {
     return 0;
   }
 
-  throw new Error(`Unknown command \"${command}\".\n\n${help()}`);
+  throw new Error(`Unknown command "${command}".`);
 }
 
 if (isCliEntrypoint(import.meta.url, process.argv[1])) {
