@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
-import { equal, match, ok } from 'node:assert/strict';
+import { equal, match, ok, rejects } from 'node:assert/strict';
 import { test } from 'node:test';
 
 const execFileAsync = promisify(execFile);
@@ -40,4 +40,26 @@ test('parser handles flags and positionals deterministically', async () => {
   equal(parsed.positionals[0], 'workspace');
   equal(parsed.values.format, 'json');
   equal(parsed.values['fail-on-drift'], true);
+});
+
+test('init rejects unknown flags and operands before writing output', async () => {
+  const cli = await import('../src/cli.js');
+  const temp = await mkdtemp(join(tmpdir(), 'lockstep-test-'));
+  const output = join(temp, 'nested', 'policy.json');
+  try {
+    await rejects(cli.run(['init', '--ouptut', output]), /Unknown option "--ouptut"/);
+    await rejects(cli.run(['init', '--format', 'json']), /Unknown option "--format"/);
+    await rejects(cli.run(['init', 'extra', '--write-policy', '--output', output]), /Too many operands for init/);
+    await rejects(readFile(output, 'utf8'), { code: 'ENOENT' });
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+  }
+});
+
+test('scan rejects unknown flags and surplus operands before loading policy', async () => {
+  const cli = await import('../src/cli.js');
+  const missingPolicy = join(tmpdir(), 'lockstep-policy-that-does-not-exist.json');
+  await rejects(cli.run(['scan', '.', '--polciy', missingPolicy]), /Unknown option "--polciy"/);
+  await rejects(cli.run(['scan', '.', '--write-policy']), /Unknown option "--write-policy"/);
+  await rejects(cli.run(['scan', '.', 'extra', '--policy', missingPolicy]), /Too many operands for scan/);
 });
