@@ -145,8 +145,17 @@ Lockstep scans files and writes reports only when you pass `--output` or `init -
 
 The npm package allowlist includes the runtime files plus the public support
 documents needed for release review: `README.md`, `LICENSE`, `SECURITY.md`, `SAFETY.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`.
-Run `npm run package:smoke` or `npm pack --dry-run` before publishing to
-confirm those files are still present in the tarball.
+Lockstep uses the package identity `@rogerchappel/lockstep`, but distribution is
+deliberately GitHub-only. The package is marked private so `npm publish` cannot
+claim or overwrite an npm registry identity. Install a tagged release from its
+GitHub tarball (replace `v0.1.0` with the required release):
+
+```sh
+npm install github:rogerchappel/lockstep#v0.1.0
+```
+
+Run `npm run package:smoke` or `npm pack --dry-run` before creating a GitHub
+release to confirm the CLI and public files are still present in the tarball.
 
 ## Verification
 
@@ -158,6 +167,7 @@ npm test
 npm run build
 npm run smoke
 npm run package:smoke
+npm run release:identity
 npm run release:check
 bash scripts/validate.sh
 ```

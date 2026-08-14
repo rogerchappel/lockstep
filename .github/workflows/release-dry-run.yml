@@ -7,6 +7,7 @@ on:
       - releasebox.config.json
       - package.json
       - package-lock.json
+      - scripts/check-release-identity.mjs
       - .github/workflows/release*.yml
 
 permissions:
