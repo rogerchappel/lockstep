@@ -18,4 +18,4 @@
 - [ ] Add baseline comparison for gradual adoption.
 - [ ] Add CSV output for spreadsheet-heavy release rooms.
 - [ ] Add richer package-manager lockfile mismatch diagnostics.
-- [ ] Publish install instructions after the first tagged release.
+- [x] Document GitHub-only installation and guard the private package identity.
