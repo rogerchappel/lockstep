@@ -7,6 +7,13 @@ format and uses semantic versioning when versioned releases are published.
 
 ## [Unreleased]
 
+### Changed
+
+- Toolchain alignment: TypeScript now declared at `^7.0.2` (latest stable
+  compiler) and `@types/node` at the Node 24 LTS line (`^24.13.3`).
+  `npm pack` already rebuilds `dist` via the `prepack` hook, so packaged
+  output is always current.
+
 ### Added
 
 - Initial project setup.
