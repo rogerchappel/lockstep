@@ -6,7 +6,7 @@ import type { ScanReport } from '../src/types.js';
 
 const report: ScanReport = {
   summary: { scannedAt: '2026-01-01T00:00:00.000Z', root: '/tmp/demo', packageCount: 1, findingCount: 1, errorCount: 1, warningCount: 0 },
-  packages: [{ name: 'demo', relativePath: '.', packageJsonPath: '/tmp/demo/package.json', scripts: {}, engines: {}, lockfiles: [] }],
+  packages: [{ name: 'demo', relativePath: '.', packageJsonPath: '/tmp/demo/package.json', scripts: {}, engines: {}, lockfiles: [], governingLockfile: 'package-lock.json' }],
   findings: [{ packageName: 'demo', packagePath: '.', category: 'script', severity: 'error', message: 'Missing required script "test".', suggestion: 'Add it.' }],
   policy: defaultPolicy
 };
@@ -14,6 +14,8 @@ const report: ScanReport = {
 test('renders markdown report with package inventory', () => {
   match(formatMarkdown(report), /# Lockstep Drift Report/);
   match(formatMarkdown(report), /Package \| Path/);
+  match(formatMarkdown(report), /Governing lockfile/);
+  match(formatMarkdown(report), /package-lock\.json/);
 });
 
 test('renders table report with finding details', () => {
