@@ -1,6 +1,6 @@
 import { deepEqual, equal } from 'node:assert/strict';
 import { test } from 'node:test';
-import { analyzePackage } from '../src/drift.js';
+import { analyzePackage, npmScriptFromValidationCommand } from '../src/drift.js';
 import { normalizePolicy } from '../src/policy.js';
 import type { PackageRecord } from '../src/types.js';
 
@@ -41,4 +41,25 @@ test('reports a missing npm script when its validation command has arguments', (
     findings[0]?.message,
     'Validation command "npm run missing -- --verbose" cannot run because script "missing" is absent.'
   );
+});
+
+test('recognizes npm script syntaxes and supported flags', () => {
+  equal(npmScriptFromValidationCommand('npm test'), 'test');
+  equal(npmScriptFromValidationCommand('npm run check'), 'check');
+  equal(npmScriptFromValidationCommand('npm --silent run check'), 'check');
+  equal(npmScriptFromValidationCommand('npm run --if-present check'), 'check');
+  equal(npmScriptFromValidationCommand('npm --workspace packages/example test'), 'test');
+});
+
+test('ignores built-ins and malformed or ambiguous commands', () => {
+  for (const command of [
+    'npm ci', 'npm install', 'npm exec tsc', 'npm run',
+    'npm --unknown run check', 'npm run check && npm run test'
+  ]) {
+    equal(npmScriptFromValidationCommand(command), undefined, command);
+  }
+});
+
+test('does not report npm built-ins as missing package scripts', () => {
+  deepEqual(validationFindings(['npm ci', 'npm install', 'npm exec tsc']), []);
 });

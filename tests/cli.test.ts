@@ -1,9 +1,9 @@
 import { execFile } from 'node:child_process';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
-import { equal, match, ok, rejects } from 'node:assert/strict';
+import { deepEqual, equal, match, ok, rejects } from 'node:assert/strict';
 import { test } from 'node:test';
 
 const execFileAsync = promisify(execFile);
@@ -62,4 +62,23 @@ test('scan rejects unknown flags and surplus operands before loading policy', as
   await rejects(cli.run(['scan', '.', '--polciy', missingPolicy]), /Unknown option "--polciy"/);
   await rejects(cli.run(['scan', '.', '--write-policy']), /Unknown option "--write-policy"/);
   await rejects(cli.run(['scan', '.', 'extra', '--policy', missingPolicy]), /Too many operands for scan/);
+});
+
+test('scan ignores npm built-ins while validating npm script commands', async () => {
+  const temp = await mkdtemp(join(tmpdir(), 'lockstep-validation-'));
+  try {
+    await writeFile(join(temp, 'package.json'), JSON.stringify({ name: 'fixture', scripts: { test: 'node --test' } }));
+    const policy = join(temp, 'lockstep.config.json');
+    await writeFile(policy, JSON.stringify({
+      requiredScripts: [], optionalScripts: [],
+      validationCommands: ['npm ci', 'npm install', 'npm exec tsc', 'npm --silent test', 'npm run --if-present check']
+    }));
+    const result = await execFileAsync(process.execPath, ['dist/src/cli.js', 'scan', temp, '--policy', policy, '--format', 'json']);
+    const report = JSON.parse(result.stdout);
+    deepEqual(report.findings.filter((item: { category: string }) => item.category === 'validation').map((item: { message: string }) => item.message), [
+      'Validation command "npm run --if-present check" cannot run because script "check" is absent.'
+    ]);
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+  }
 });
