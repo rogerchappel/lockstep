@@ -44,10 +44,10 @@ export function formatMarkdown(report: ScanReport): string {
   }
 
   lines.push('', '## Packages', '');
-  lines.push('| Package | Path | Scripts | Engine | Manager | Lockfiles |');
-  lines.push('| --- | --- | --- | --- | --- | --- |');
+  lines.push('| Package | Path | Scripts | Engine | Manager | Lockfiles | Governing lockfile |');
+  lines.push('| --- | --- | --- | --- | --- | --- | --- |');
   for (const pkg of report.packages) {
-    lines.push(`| ${escapeMarkdownCell(pkg.name)} | \`${escapeMarkdownCell(pkg.relativePath)}\` | ${escapeMarkdownCell(Object.keys(pkg.scripts).sort().join(', ') || '—')} | ${escapeMarkdownCell(pkg.engines.node ?? '—')} | ${escapeMarkdownCell(pkg.packageManager ?? '—')} | ${escapeMarkdownCell(pkg.lockfiles.join(', ') || '—')} |`);
+    lines.push(`| ${escapeMarkdownCell(pkg.name)} | \`${escapeMarkdownCell(pkg.relativePath)}\` | ${escapeMarkdownCell(Object.keys(pkg.scripts).sort().join(', ') || '—')} | ${escapeMarkdownCell(pkg.engines.node ?? '—')} | ${escapeMarkdownCell(pkg.packageManager ?? '—')} | ${escapeMarkdownCell(pkg.lockfiles.join(', ') || '—')} | ${escapeMarkdownCell(pkg.governingLockfile ?? '—')} |`);
   }
 
   return `${lines.join('\n')}\n`;
