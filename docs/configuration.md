@@ -6,7 +6,7 @@ Lockstep policy files are JSON so they can be reviewed easily in release and pla
 | --- | --- |
 | `requiredScripts` | Scripts that produce error findings when absent. |
 | `optionalScripts` | Documented scripts that may be useful but are not enforced yet. |
-| `validationCommands` | Commands maintainers expect to run; Lockstep checks that referenced scripts exist. |
+| `validationCommands` | Commands maintainers expect to run. Lockstep checks scripts referenced by `npm test` and `npm run <script>` (including supported npm flags). Built-ins such as `npm ci`, `npm install`, and `npm exec` do not imply package scripts; complex or ambiguous shell commands are not inferred. |
 | `requiredEngines.node` | Expected `engines.node` value. |
 | `allowedPackageManagers` | Prefixes such as `npm@` or `pnpm@`. |
 | `requirePackageManager` | Warn when `packageManager` is missing. |
