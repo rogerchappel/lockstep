@@ -109,8 +109,14 @@ exits non-zero for the deliberately drifting fixture. See
 - Validation commands that reference scripts that do not exist
 - `engines.node` consistency
 - `packageManager` presence and allowed manager prefixes
-- Lockfile presence beside each manifest
+- Lockfile governance: a package may use its own lockfile or an ancestor workspace's lockfile when its path matches that manifest's `workspaces` patterns
 - Additional ignored directory names from policy
+
+Local lockfiles take precedence. A package without one is governed by the nearest
+ancestor package that both has a supported lockfile and includes the package path
+in its `workspaces` patterns. Merely nesting a package beneath another manifest is
+not enough, so independent packages still need their own lockfile. JSON and
+Markdown package inventories expose the resolved `governingLockfile` decision.
 
 ## Policy example
 

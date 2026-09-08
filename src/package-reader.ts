@@ -11,6 +11,7 @@ interface PackageJsonShape {
   engines?: Record<string, string>;
   packageManager?: string;
   private?: boolean;
+  workspaces?: string[] | { packages?: string[] };
 }
 
 export async function readPackage(root: string, packageJsonPath: string): Promise<PackageRecord> {
@@ -30,6 +31,7 @@ export async function readPackage(root: string, packageJsonPath: string): Promis
     engines: parsed.engines ?? {},
     packageManager: parsed.packageManager,
     lockfiles,
+    workspacePatterns: Array.isArray(parsed.workspaces) ? parsed.workspaces : parsed.workspaces?.packages,
     private: parsed.private
   };
 }

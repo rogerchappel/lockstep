@@ -91,12 +91,12 @@ export function analyzePackage(pkg: PackageRecord, policy: LockstepPolicy): Drif
     }
   }
 
-  if (policy.requireLockfile && pkg.lockfiles.length === 0) {
+  if (policy.requireLockfile && !pkg.governingLockfile) {
     findings.push(finding(pkg, {
       category: 'lockfile',
       severity: 'warning',
-      message: 'No supported lockfile found beside package.json.',
-      suggestion: 'Commit a package-manager lockfile for repeatable installs.'
+      message: 'No governing supported lockfile found for package.json.',
+      suggestion: 'Commit a package-manager lockfile locally or include the package in an ancestor workspace.'
     }));
   }
 

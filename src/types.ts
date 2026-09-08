@@ -22,6 +22,8 @@ export interface PackageRecord {
   engines: Record<string, string>;
   packageManager?: string;
   lockfiles: string[];
+  governingLockfile?: string;
+  workspacePatterns?: string[];
   private?: boolean;
 }
 
