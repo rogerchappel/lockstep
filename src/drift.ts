@@ -9,9 +9,30 @@ function finding(pkg: PackageRecord, input: Omit<DriftFinding, 'packageName' | '
   };
 }
 
-function npmScriptFromValidationCommand(command: string): string | undefined {
-  const match = command.match(/^npm\s+(?:run\s+)?(\S+)(?:\s|$)/);
-  return match?.[1];
+const booleanOptions = new Set(['--silent', '--ignore-scripts', '--if-present', '--foreground-scripts']);
+const valueOptions = new Set(['--workspace', '-w', '--prefix', '--userconfig', '--cache', '--registry']);
+
+function consumeOptions(tokens: string[]): boolean {
+  while (tokens[0]?.startsWith('-')) {
+    const option = tokens.shift()!;
+    if (option.includes('=') || booleanOptions.has(option)) continue;
+    if (valueOptions.has(option) && tokens.shift()) continue;
+    return false;
+  }
+  return true;
+}
+
+export function npmScriptFromValidationCommand(command: string): string | undefined {
+  if (/[;&|<>`'"\\]/.test(command)) return undefined;
+  const tokens = command.trim().split(/\s+/);
+  if (tokens.shift() !== 'npm' || !consumeOptions(tokens)) return undefined;
+
+  const subcommand = tokens.shift();
+  if (subcommand === 'test' || subcommand === 't') return 'test';
+  if ((subcommand !== 'run' && subcommand !== 'run-script') || !consumeOptions(tokens)) return undefined;
+
+  const script = tokens.shift();
+  return script && !script.startsWith('-') ? script : undefined;
 }
 
 export function analyzePackage(pkg: PackageRecord, policy: LockstepPolicy): DriftFinding[] {
