@@ -6,13 +6,20 @@ It is local-first, deterministic, and intentionally boring: no SaaS, no telemetr
 
 ## Install
 
+Lockstep is currently distributed through GitHub releases, not the npm
+registry. Its package metadata is marked `private`, so `npm install
+@rogerchappel/lockstep` from the registry is not available. To install the
+CLI, clone this repository and run the commands from its root:
+
 ```sh
+git clone https://github.com/rogerchappel/lockstep.git
+cd lockstep
 npm install
 npm run build
 npm link
 ```
 
-Or run from a checkout:
+Alternatively, run directly from the repository root without linking:
 
 ```sh
 node dist/src/cli.js scan .
