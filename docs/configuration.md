@@ -22,3 +22,5 @@ pipelines, command chains, environment assignments, or npm options placed
 before the script name.
 
 Run `lockstep init --write-policy` to create a starter policy.
+
+`ignoredDirectories` entries also support `*` and `?` glob wildcards. Patterns are matched against directory names at any depth or workspace-relative directory paths; for example, `packages/*-generated` ignores matching paths under `packages`.
