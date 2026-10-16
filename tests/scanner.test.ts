@@ -25,3 +25,15 @@ test('resolves workspace lockfile ownership without hiding independent missing l
   equal(report.findings.some((finding) => finding.packageName === 'independent' && finding.category === 'lockfile'), false);
   ok(report.findings.some((finding) => finding.packageName === 'missing' && finding.category === 'lockfile'));
 });
+
+test('policy ignore globs exclude matching packages without changing default discovery', async () => {
+  const defaultPolicy = await loadPolicy();
+  const defaultReport = await scanWorkspace('tests/fixtures/workspace', defaultPolicy);
+  ok(defaultReport.packages.some((pkg) => pkg.name === 'ignored-package'));
+
+  const policy = await loadPolicy('tests/fixtures/workspace/lockstep.config.json');
+  policy.ignoredDirectories = ['ignored-*'];
+  const report = await scanWorkspace('tests/fixtures/workspace', policy);
+  equal(report.packages.some((pkg) => pkg.name === 'ignored-package'), false);
+  equal(report.summary.packageCount, 3);
+});
