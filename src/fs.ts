@@ -35,8 +35,11 @@ export async function findPackageJsonFiles(root: string, options: DiscoveryOptio
     const entries = await readdir(directory, { withFileTypes: true });
     for (const entry of entries) {
       if (entry.isDirectory()) {
-        const ignored = new Set([...ignoredDirectoryNames, ...(options.ignoredDirectories ?? [])]);
-        if (!ignored.has(entry.name)) await walk(join(directory, entry.name));
+        const relativePath = join(directory.replaceAll('\\', '/').split('/').slice(root.replaceAll('\\', '/').split('/').length).join('/'), entry.name);
+        const ignored = ignoredDirectoryNames.has(entry.name) || (options.ignoredDirectories ?? []).some((pattern) =>
+          directoryGlobMatches(pattern, entry.name) || directoryGlobMatches(pattern, relativePath)
+        );
+        if (!ignored) await walk(join(directory, entry.name));
         continue;
       }
       if (entry.isFile() && entry.name === 'package.json') {
@@ -47,4 +50,13 @@ export async function findPackageJsonFiles(root: string, options: DiscoveryOptio
 
   await walk(root);
   return results.sort();
+}
+
+function directoryGlobMatches(pattern: string, directoryName: string): boolean {
+  const expression = pattern
+    .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+    .replace(/\*\*/g, '.*')
+    .replace(/\*/g, '.*')
+    .replace(/\?/g, '.');
+  return new RegExp(`^${expression}$`).test(directoryName);
 }
