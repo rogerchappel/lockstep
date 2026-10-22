@@ -30,12 +30,13 @@
   "scripts": {
     "build": "tsc",
     "check": "tsc --noEmit",
-    "test": "npm run build && node --test dist/tests/*.test.js",
+    "test": "npm run build && npm run test:only",
     "smoke": "npm run build && node dist/src/cli.js scan tests/fixtures/workspace --policy tests/fixtures/workspace/lockstep.config.json --format markdown --output /tmp/lockstep-smoke.md && test -s /tmp/lockstep-smoke.md",
     "package:smoke": "bash scripts/package-smoke.sh",
     "release:identity": "node scripts/check-release-identity.mjs",
     "release:check": "npm run release:identity && npm test && npm run check && npm run build && npm run smoke && npm run package:smoke",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "test:only": "node --test dist/tests/*.test.js"
   },
   "keywords": [
     "cli",
