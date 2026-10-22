@@ -7,6 +7,8 @@ Thanks for helping keep package fleets marching together.
 ```sh
 npm install
 npm test
+
+To run the compiled fixture suite without rebuilding, first ensure `dist/` is current, then run `npm run test:only`.
 npm run check
 npm run build
 npm run smoke
