@@ -35,5 +35,14 @@ test('policy ignore globs exclude matching packages without changing default dis
   policy.ignoredDirectories = ['ignored-*'];
   const report = await scanWorkspace('tests/fixtures/workspace', policy);
   equal(report.packages.some((pkg) => pkg.name === 'ignored-package'), false);
+  ok(report.packages.some((pkg) => pkg.name === 'drifty-package'));
   equal(report.summary.packageCount, 3);
+});
+
+test('policy ignore globs match nested paths but wildcards do not cross directories', async () => {
+  const policy = await loadPolicy('tests/fixtures/workspace/lockstep.config.json');
+  policy.ignoredDirectories = ['packages/ignored-*'];
+  const report = await scanWorkspace('tests/fixtures/workspace', policy);
+  ok(report.packages.some((pkg) => pkg.name === 'drifty-package'));
+  equal(report.packages.some((pkg) => pkg.name === 'weird-package'), true);
 });

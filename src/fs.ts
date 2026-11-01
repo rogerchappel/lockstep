@@ -1,5 +1,5 @@
 import { readdir, stat } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 
 const ignoredDirectoryNames = new Set([
   '.git',
@@ -35,9 +35,9 @@ export async function findPackageJsonFiles(root: string, options: DiscoveryOptio
     const entries = await readdir(directory, { withFileTypes: true });
     for (const entry of entries) {
       if (entry.isDirectory()) {
-        const relativePath = join(directory.replaceAll('\\', '/').split('/').slice(root.replaceAll('\\', '/').split('/').length).join('/'), entry.name);
+        const relativePath = relative(root, join(directory, entry.name)).split(sep).join('/');
         const ignored = ignoredDirectoryNames.has(entry.name) || (options.ignoredDirectories ?? []).some((pattern) =>
-          directoryGlobMatches(pattern, entry.name) || directoryGlobMatches(pattern, relativePath)
+          directoryGlobMatches(pattern, relativePath) || (!pattern.includes('/') && directoryGlobMatches(pattern, entry.name))
         );
         if (!ignored) await walk(join(directory, entry.name));
         continue;
@@ -52,11 +52,12 @@ export async function findPackageJsonFiles(root: string, options: DiscoveryOptio
   return results.sort();
 }
 
-function directoryGlobMatches(pattern: string, directoryName: string): boolean {
+function directoryGlobMatches(pattern: string, directoryPath: string): boolean {
   const expression = pattern
     .replace(/[.+^${}()|[\]\\]/g, '\\$&')
-    .replace(/\*\*/g, '.*')
-    .replace(/\*/g, '.*')
-    .replace(/\?/g, '.');
-  return new RegExp(`^${expression}$`).test(directoryName);
+    .replace(/\*\*/g, '\u0000')
+    .replace(/\*/g, '[^/]*')
+    .replace(/\u0000/g, '.*')
+    .replace(/\?/g, '[^/]');
+  return new RegExp(`^${expression}$`).test(directoryPath);
 }
