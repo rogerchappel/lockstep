@@ -8,6 +8,13 @@ test('scans packages and reports deterministic drift', async () => {
   const report = await scanWorkspace('tests/fixtures/workspace', policy, new Date('2026-01-01T00:00:00.000Z'));
   equal(report.summary.packageCount, 3);
   equal(report.packages.some((pkg) => pkg.name === 'ignored-package'), false);
+  const unignoredPolicy = await loadPolicy();
+  const unignoredReport = await scanWorkspace('tests/fixtures/workspace', unignoredPolicy, new Date('2026-01-01T00:00:00.000Z'));
+  const ignoredPackage = unignoredReport.packages.find((pkg) => pkg.name === 'ignored-package');
+  ok(ignoredPackage);
+  equal(ignoredPackage.lockfiles.length, 0);
+  equal(ignoredPackage.governingLockfile, undefined);
+  ok(unignoredReport.findings.some((finding) => finding.packageName === 'ignored-package' && finding.category === 'lockfile' && finding.severity === 'warning' && finding.message === 'No governing supported lockfile found for package.json.'));
   ok(report.findings.some((finding) => finding.packageName === 'drifty-package' && finding.category === 'script'));
   ok(report.findings.some((finding) => finding.packageName === 'drifty-package' && finding.category === 'packageManager'));
   ok(report.findings.some((finding) => finding.packageName === 'weird-package' && finding.category === 'lockfile'));
