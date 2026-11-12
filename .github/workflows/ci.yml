@@ -60,10 +60,11 @@ jobs:
 
           test -f package.json
 
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
+          if [ ! -f package-lock.json ]; then
+            echo "Required package-lock.json is missing; refusing a non-reproducible install." >&2
+            exit 1
           fi
+
+          npm ci
 
           npm run release:check
