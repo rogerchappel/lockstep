@@ -11,7 +11,8 @@ export const defaultPolicy: LockstepPolicy = {
   allowedPackageManagers: ['npm@', 'pnpm@'],
   requirePackageManager: false,
   requireLockfile: true,
-  ignoredDirectories: []
+  ignoredDirectories: [],
+  ignoredPackages: []
 };
 
 export function normalizePolicy(input: Partial<LockstepPolicy> = {}): LockstepPolicy {
@@ -26,7 +27,8 @@ export function normalizePolicy(input: Partial<LockstepPolicy> = {}): LockstepPo
       ...input.requiredEngines
     },
     allowedPackageManagers: input.allowedPackageManagers ?? defaultPolicy.allowedPackageManagers,
-    ignoredDirectories: input.ignoredDirectories ?? defaultPolicy.ignoredDirectories
+    ignoredDirectories: input.ignoredDirectories ?? defaultPolicy.ignoredDirectories,
+    ignoredPackages: input.ignoredPackages ?? defaultPolicy.ignoredPackages
   };
 }
 

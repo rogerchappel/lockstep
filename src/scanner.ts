@@ -9,7 +9,8 @@ export async function scanWorkspace(rootInput: string, policy: LockstepPolicy, n
   const packageJsonFiles = await findPackageJsonFiles(root, { ignoredDirectories: policy.ignoredDirectories });
   const packages = await Promise.all(packageJsonFiles.map((file) => readPackage(root, file)));
   resolveGoverningLockfiles(root, packages);
-  const findings = packages.flatMap((pkg) => analyzePackage(pkg, policy));
+  const includedPackages = packages.filter((pkg) => !policy.ignoredPackages?.some((pattern) => matchesGlob(pkg.name, pattern)));
+  const findings = includedPackages.flatMap((pkg) => analyzePackage(pkg, policy));
   const errorCount = findings.filter((finding) => finding.severity === 'error').length;
   const warningCount = findings.filter((finding) => finding.severity === 'warning').length;
 
@@ -17,12 +18,12 @@ export async function scanWorkspace(rootInput: string, policy: LockstepPolicy, n
     summary: {
       scannedAt: now.toISOString(),
       root,
-      packageCount: packages.length,
+      packageCount: includedPackages.length,
       findingCount: findings.length,
       errorCount,
       warningCount
     },
-    packages,
+    packages: includedPackages,
     findings,
     policy
   };
@@ -59,4 +60,9 @@ function workspacePatternMatches(pattern: string, packagePath: string): boolean 
     .replace(/\*/g, '[^/]*')
     .replace(/\u0000/g, '.*');
   return new RegExp(`^${escaped.replace(/\/$/, '')}$`).test(packagePath);
+}
+
+function matchesGlob(value: string, pattern: string): boolean {
+  const escaped = pattern.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.');
+  return new RegExp(`^${escaped}$`).test(value);
 }

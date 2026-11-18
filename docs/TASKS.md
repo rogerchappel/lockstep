@@ -14,7 +14,7 @@
 
 ## Next useful work
 
-- [ ] Add ignore globs from the policy file.
+- [x] Add ignore globs from the policy file.
 - [ ] Add baseline comparison for gradual adoption.
 - [ ] Add CSV output for spreadsheet-heavy release rooms.
 - [ ] Add richer package-manager lockfile mismatch diagnostics.

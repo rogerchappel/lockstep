@@ -7,5 +7,6 @@
   "requirePackageManager": true,
   "requireLockfile": true
 ,
-  "ignoredDirectories": ["ignored-package"]
+  "ignoredDirectories": ["ignored-package"],
+  "ignoredPackages": ["ignored-*"]
 }

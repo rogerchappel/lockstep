@@ -11,6 +11,7 @@ export interface LockstepPolicy {
   requirePackageManager?: boolean;
   requireLockfile?: boolean;
   ignoredDirectories?: string[];
+  ignoredPackages?: string[];
 }
 
 export interface PackageRecord {

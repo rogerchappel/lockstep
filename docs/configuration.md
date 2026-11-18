@@ -23,4 +23,4 @@ before the script name.
 
 Run `lockstep init --write-policy` to create a starter policy.
 
-`ignoredDirectories` entries also support `*` and `?` glob wildcards. Patterns are matched against directory names at any depth or workspace-relative directory paths; for example, `packages/*-generated` ignores matching paths under `packages`.
+`ignoredDirectories` entries also support `*` and `?` glob wildcards. Patterns are matched against directory names at any depth or workspace-relative directory paths; for example, `packages/*-generated` ignores matching paths under `packages`.\n\n`ignoredPackages` supports `*` and `?` globs against package names (the `name` field in `package.json`). Matching packages are omitted from the report and drift checks; for example, `@demo/*-internal` excludes internal scoped packages.
