@@ -55,7 +55,15 @@ function resolveGoverningLockfiles(root: string, packages: ScanReport['packages'
 
 function workspacePatternMatches(pattern: string, packagePath: string): boolean {
   const escaped = pattern
-    .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+    .split(/(\{[^{}]+\})/g)
+    .map((part) => {
+      if (part.startsWith('{') && part.endsWith('}')) {
+        const alternatives = part.slice(1, -1).split(',').map((value) => value.replace(/[.+^${}()|[\]\\]/g, '\\$&'));
+        return `(?:${alternatives.join('|')})`;
+      }
+      return part.replace(/[.+^${}()|[\]\\]/g, '\\$&');
+    })
+    .join('')
     .replace(/\*\*/g, '\u0000')
     .replace(/\*/g, '[^/]*')
     .replace(/\u0000/g, '.*');

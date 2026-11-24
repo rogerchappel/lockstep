@@ -33,6 +33,16 @@ test('resolves workspace lockfile ownership without hiding independent missing l
   ok(report.findings.some((finding) => finding.packageName === 'missing' && finding.category === 'lockfile'));
 });
 
+test('matches npm workspace brace alternatives for governing lockfiles', async () => {
+  const policy = await loadPolicy('tests/fixtures/lockfile-ownership/lockstep.config.json');
+  const report = await scanWorkspace('tests/fixtures/lockfile-ownership', policy);
+  const byName = new Map(report.packages.map((pkg) => [pkg.name, pkg]));
+
+  equal(byName.get('foo')?.governingLockfile, 'package-lock.json');
+  equal(byName.get('bar')?.governingLockfile, 'package-lock.json');
+  equal(byName.get('baz')?.governingLockfile, 'package-lock.json');
+});
+
 test('policy ignore globs exclude matching packages without changing default discovery', async () => {
   const defaultPolicy = await loadPolicy();
   const defaultReport = await scanWorkspace('tests/fixtures/workspace', defaultPolicy);
